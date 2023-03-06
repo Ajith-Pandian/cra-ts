@@ -1,11 +1,16 @@
-import { Col, Row } from "antd";
+import { Row } from "antd";
 import { useEffect, useState } from "react";
 import Spinner from "react-spinkit";
 
+import styled from "styled-components";
 import { getUsers } from "../api";
-import { getAvatarUrl } from "../utils";
 import { IUser } from "../utils/models";
-import { Text } from "./components";
+import Card from "./components/Card";
+import { FullContainer, Text } from "./components/common";
+
+const CardsContainer = styled(Row)`
+  padding: 16px;
+`;
 
 const App = () => {
   const [users, setUsers] = useState<IUser[]>([]);
@@ -27,24 +32,25 @@ const App = () => {
       });
   }, []);
 
-  if (loading) return <Spinner name="three-bounce" />;
-  if (error) return <Text type="danger">{error}</Text>;
+  if (loading)
+    return (
+      <FullContainer>
+        <Spinner name="three-bounce" />
+      </FullContainer>
+    );
+  if (error)
+    return (
+      <FullContainer>
+        <Text type="danger">{error}</Text>
+      </FullContainer>
+    );
 
   return (
-    <>
-      <Row>
-        {users?.map(({ id, name, avatar, username }, index) => (
-          <Col key={id} xs={24} sm={24} md={8} lg={8} xl={6} span={6}>
-            <img
-              style={{ height: "200px", width: "200px" }}
-              src={getAvatarUrl(username)}
-              alt={`${name}-avatar`}
-            />
-            <Text>{name}</Text>
-          </Col>
-        ))}
-      </Row>
-    </>
+    <CardsContainer>
+      {users?.map((user) => (
+        <Card user={user} />
+      ))}
+    </CardsContainer>
   );
 };
 

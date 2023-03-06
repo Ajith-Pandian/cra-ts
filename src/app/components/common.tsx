@@ -4,6 +4,13 @@ import styled from "styled-components";
 const { Text: AntText } = Typography;
 
 export const Text = styled(AntText)`
-  font-size: 1.5em;
   text-align: center;
+`;
+
+export const FullContainer = styled.div`
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
 `;
