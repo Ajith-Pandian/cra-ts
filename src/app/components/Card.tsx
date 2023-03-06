@@ -49,16 +49,21 @@ const UserAvatar = styled.img`
   width: 200px;
 `;
 
+const Title = styled(AntCard.Meta)`
+  text-align: center;
+`;
+
 const Details = styled.div`
   display: flex;
   flex-direction: column;
-  margin-top: 8px;
+  margin-top: 12px;
   gap: 4px;
 `;
 
 const DetailRow = styled.div`
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 8px;
 `;
 
@@ -138,16 +143,17 @@ const Card = ({ user, className, onUserDataUpdate }: ICardProps) => {
           </ImageContainer>
         }
         actions={[
-          <HeartOutlined key="like" style={HEART_ICON_STYLE} />,
+          <HeartOutlined key="like" title="Like" style={HEART_ICON_STYLE} />,
           <EditOutlined
             key="edit"
+            title="Edit"
             style={ICON_STYLES}
             onClick={openEditModal}
           />,
-          <DeleteFilled key="delete" style={ICON_STYLES} />,
+          <DeleteFilled key="delete" title="Delete" style={ICON_STYLES} />,
         ]}
       >
-        <AntCard.Meta title={name} />
+        <Title title={name} />
         <Details>
           {details.map(({ icon, label, link }) => (
             <DetailRow>
