@@ -14,3 +14,10 @@ export const FullContainer = styled.div`
   justify-content: center;
   height: 100vh;
 `;
+
+export const VerticalContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+`;

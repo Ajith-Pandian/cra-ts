@@ -2,13 +2,17 @@ import {
   DeleteFilled,
   EditOutlined,
   GlobalOutlined,
+  HeartFilled,
   HeartOutlined,
   MailOutlined,
   PhoneOutlined,
 } from "@ant-design/icons";
 import { Card as AntCard, Col, Typography } from "antd";
 import { useCallback, useState } from "react";
+import { useDispatch } from "react-redux";
 import styled from "styled-components";
+
+import { removeUser, updateUserLike } from "../../redux/userSlice";
 import { getAvatarUrl } from "../../utils";
 import { IEditUser, IUser } from "../../utils/models";
 import { colors } from "../../utils/theme";
@@ -101,7 +105,17 @@ interface ICardProps {
 
 const Card = ({ user, className, onUserDataUpdate }: ICardProps) => {
   const [isModalVisible, setModalVisibility] = useState<boolean>(false);
-  const { username, name, email, phone, website } = user || {};
+  const {
+    id: userId,
+    username,
+    name,
+    email,
+    phone,
+    website,
+    liked,
+  } = user || {};
+
+  const dispatch = useDispatch();
 
   const details = [
     {
@@ -143,20 +157,43 @@ const Card = ({ user, className, onUserDataUpdate }: ICardProps) => {
           </ImageContainer>
         }
         actions={[
-          <HeartOutlined key="like" title="Like" style={HEART_ICON_STYLE} />,
+          liked ? (
+            <HeartFilled
+              key="unlike"
+              title="Unlike"
+              style={HEART_ICON_STYLE}
+              onClick={() =>
+                dispatch(updateUserLike({ userId, isLiked: false }))
+              }
+            />
+          ) : (
+            <HeartOutlined
+              key="like"
+              title="Like"
+              style={HEART_ICON_STYLE}
+              onClick={() =>
+                dispatch(updateUserLike({ userId, isLiked: true }))
+              }
+            />
+          ),
           <EditOutlined
             key="edit"
             title="Edit"
             style={ICON_STYLES}
             onClick={openEditModal}
           />,
-          <DeleteFilled key="delete" title="Delete" style={ICON_STYLES} />,
+          <DeleteFilled
+            key="delete"
+            title="Delete"
+            style={ICON_STYLES}
+            onClick={() => dispatch(removeUser({ userId }))}
+          />,
         ]}
       >
         <Title title={name} />
         <Details>
           {details.map(({ icon, label, link }) => (
-            <DetailRow>
+            <DetailRow key={label}>
               {icon}
               {link ? (
                 <DetailLink href={link} target={"_blank"}>

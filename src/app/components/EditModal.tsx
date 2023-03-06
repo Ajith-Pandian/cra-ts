@@ -1,4 +1,5 @@
 import { Form, Input, Modal } from "antd";
+
 import { IEditUser, IUser } from "../../utils/models";
 
 const { useForm } = Form;
@@ -76,7 +77,12 @@ const EditModal = ({
         initialValues={{ id, name, email, phone, website }}
       >
         {FORM_FIELDS.map(({ label, name, required }) => (
-          <Form.Item name={name} label={label} rules={[{ required }]}>
+          <Form.Item
+            key={name}
+            name={name}
+            label={label}
+            rules={[{ required }]}
+          >
             <Input />
           </Form.Item>
         ))}
