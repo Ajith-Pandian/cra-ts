@@ -16,3 +16,11 @@ export interface IUser {
   };
   avatar?: string;
 }
+
+export interface IEditUser {
+  id: string;
+  name: string;
+  email: string;
+  phone: string;
+  website: string;
+}

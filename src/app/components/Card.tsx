@@ -7,16 +7,26 @@ import {
   PhoneOutlined,
 } from "@ant-design/icons";
 import { Card as AntCard, Col, Typography } from "antd";
+import { useCallback, useState } from "react";
 import styled from "styled-components";
 import { getAvatarUrl } from "../../utils";
-import { IUser } from "../../utils/models";
+import { IEditUser, IUser } from "../../utils/models";
 import { colors } from "../../utils/theme";
 import { Text } from "./common";
+import EditModal from "./EditModal";
 
 const CardContainer = styled(Col)`
   padding: 16px;
   .ant-card-actions {
     background-color: ${colors.lightBg2};
+  }
+  .ant-modal-header {
+    padding: 16px 24px !important;
+    color: rgba(0, 0, 0, 0.65);
+    color: red !important;
+    background: red;
+    border-bottom: 1px solid #e8e8e8;
+    border-radius: 4px 4px 0 0;
   }
 `;
 
@@ -81,9 +91,11 @@ const DETAILS_ICON_STYLE = {
 interface ICardProps {
   user: IUser;
   className?: string;
+  onUserDataUpdate: (user: IEditUser) => void;
 }
 
-const Card = ({ user, className }: ICardProps) => {
+const Card = ({ user, className, onUserDataUpdate }: ICardProps) => {
+  const [isModalVisible, setModalVisibility] = useState<boolean>(false);
   const { username, name, email, phone, website } = user || {};
 
   const details = [
@@ -99,11 +111,20 @@ const Card = ({ user, className }: ICardProps) => {
       link: `https://${website}`,
     },
   ];
+
+  const openEditModal = useCallback(() => {
+    setModalVisibility(true);
+  }, []);
+
+  const closeEditModal = useCallback(() => {
+    setModalVisibility(false);
+  }, []);
+
   return (
     <CardContainer
       key={user?.id}
       xs={24}
-      sm={24}
+      sm={12}
       md={8}
       lg={8}
       xl={6}
@@ -118,7 +139,11 @@ const Card = ({ user, className }: ICardProps) => {
         }
         actions={[
           <HeartOutlined key="like" style={HEART_ICON_STYLE} />,
-          <EditOutlined key="edit" style={ICON_STYLES} />,
+          <EditOutlined
+            key="edit"
+            style={ICON_STYLES}
+            onClick={openEditModal}
+          />,
           <DeleteFilled key="delete" style={ICON_STYLES} />,
         ]}
       >
@@ -138,6 +163,15 @@ const Card = ({ user, className }: ICardProps) => {
           ))}
         </Details>
       </CardBox>
+      <EditModal
+        isVisible={isModalVisible}
+        onEditComplete={(user) => {
+          onUserDataUpdate(user);
+          closeEditModal();
+        }}
+        onClose={closeEditModal}
+        user={user}
+      />
     </CardContainer>
   );
 };

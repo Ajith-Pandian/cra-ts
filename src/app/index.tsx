@@ -48,7 +48,12 @@ const App = () => {
   return (
     <CardsContainer>
       {users?.map((user) => (
-        <Card user={user} />
+        <Card
+          user={user}
+          onUserDataUpdate={(editedUserValues) => {
+            console.log({ editedUserValues });
+          }}
+        />
       ))}
     </CardsContainer>
   );
